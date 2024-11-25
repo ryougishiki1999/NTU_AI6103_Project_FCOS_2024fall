@@ -195,7 +195,7 @@ if __name__ == "__main__":
     model=FCOSDetector(mode="inference")
     model = torch.nn.DataParallel(model)
     model = model.cuda().eval()
-    model.load_state_dict(torch.load(DefaultConfig.check_point_path, map_location=torch.device('cuda')))
+    model.load_state_dict(torch.load(DefaultConfig.self_check_point_path, map_location=torch.device('cuda'))  ['model_state_dict']  )
     # model.load_state_dict(torch.load(f"/root/autodl-tmp/res/checkpoints/coco_37.2.pth", map_location=torch.device('cuda')))
     # # model.load_state_dict(torch.load(f"/root/autodl-tmp/res/checkpoints/coco_37.2.pth",map_location=torch.device('cpu')))
     #     # model.load_state_dict(torch.load("/root/autodl-tmp/checkpoints",map_location=torch.device('cpu')))

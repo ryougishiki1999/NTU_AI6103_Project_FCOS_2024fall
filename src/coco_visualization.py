@@ -97,11 +97,12 @@ if __name__=="__main__":
     model=FCOSDetector(mode="inference",config=Config)
     # model=torch.nn.SyncBatchNorm.convert_sync_batchnorm(model)
     # print("INFO===>success convert BN to SyncBN")
-    model = torch.nn.DataParallel(model)
+    # model = torch.nn.DataParallel(model)
     model=model.cuda().eval()
         
-    #model.load_state_dict(torch.load(f"/root/autodl-tmp/res/checkpoints/coco_model.pth", map_location=torch.device('cuda'))['model_state_dict'])
-    model.load_state_dict(torch.load(DefaultConfig.self_check_point_path, map_location=torch.device('cuda')) ['model_state_dict'])
+    # model.load_state_dict(torch.load(DefaultConfig.check_point_path, map_location=torch.device('cuda')) ['model_state_dict'])
+    model.load_state_dict(torch.load("/root/autodl-tmp/res/checkpoints/FCOS_R_50_FPN_1x_my.pth", map_location=torch.device('cuda')) )
+
     # model=convertSyncBNtoBN(model)
     # print("INFO===>success convert SyncBN to BN")
     print("===>success loading model")

@@ -19,6 +19,10 @@ class DefaultConfig():
     #training
     strides=[8,16,32,64,128]
     limit_range=[[-1,64],[64,128],[128,256],[256,512],[512,999999]]
+    gpu_id='0'
+    batch_size = 4
+    epochs = 25
+    num_workers = 4
 
     #inference
     score_threshold=0.05
@@ -42,7 +46,8 @@ class DefaultConfig():
     check_points_dir_path = os.path.join(assets_path, "checkpoints")
     check_point_path = os.path.join(check_points_dir_path, "coco_37.2.pth")
     self_check_point_path = os.path.join(check_points_dir_path, "coco_model.pth")
-    tmp_check_point_path = os.path.join(check_points_dir_path, "coco_tmp.pth")
+    # tmp_check_point_path = os.path.join(check_points_dir_path, "coco_tmp.pth")
     
     test_images_path = os.path.join(assets_path, "test_images")
     out_images_path = os.path.join(out_path, "images")
+    out_loss_path = os.path.join(out_images_path, "loss.png")
