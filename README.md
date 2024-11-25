@@ -2,6 +2,11 @@
 
 ## How to run
 
+platform: linux-64
+NAME="Ubuntu"
+VERSION="20.04.3 LTS (Focal Fossa)"
+5.4.0-153-generic
+
 ### Install the required packages
 Install the required packages using the following command:
 ```
