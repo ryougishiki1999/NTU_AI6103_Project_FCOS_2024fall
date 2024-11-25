@@ -1,9 +1,12 @@
 import os
 import sys
-
-sys.path.append(os.path.join(os.path.dirname(__file__), '../src'))
+sys.path.append(os.path.normpath(os.path.join(os.path.abspath(os.path.dirname(__file__)), '..', 'src')))
 
 from config import DefaultConfig
+
+if DefaultConfig.choosen_backbone is not DefaultConfig.Backbone.ResNet50:
+    print("current backbone:", DefaultConfig.choosen_backbone)
+    raise ValueError("CoCo Datset Detection only supports RestNet50 as backbone now!")
 
 from matplotlib.ticker import NullLocator
 import cv2
@@ -14,7 +17,7 @@ import numpy as np
 # from dataloader.VOC_dataset import VOCDataset
 # from dataloader.COCO_dataset import COCODataset
 import time
-
+from config import DefaultConfig
 import glob
 CLASSES_NAME = (
     '__back_ground__', 'person', 'bicycle', 'car', 'motorcycle',
@@ -109,6 +112,7 @@ if __name__=="__main__":
         
     # model.load_state_dict(torch.load(DefaultConfig.check_point_path, map_location=torch.device('cuda')) ['model_state_dict'])
     model.load_state_dict(torch.load("/root/autodl-tmp/res/checkpoints/FCOS_R_50_FPN_1x_my.pth", map_location=torch.device('cuda')) )
+    
 
     # model=convertSyncBNtoBN(model)
     # print("INFO===>success convert SyncBN to BN")
@@ -116,7 +120,7 @@ if __name__=="__main__":
 
     import os
     #root="/root/autodl-tmp/fcos/test_images/"
-    root = DefaultConfig.test_images_path
+    root = DefaultConfig.coco_detect_images_dir_path
     print(root)
     #names=os.listdir(root)
     names=glob.glob(os.path.join(root, "*.jpg"))
@@ -191,10 +195,10 @@ if __name__=="__main__":
             cv2.rectangle(img_pad, label_bg_pt1, label_bg_pt2, color, -1)
             cv2.putText(img_pad, label, (pt1[0]+3, pt1[1]-3), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (255, 255, 255), 2)
 
-        if not os.path.exists(DefaultConfig.out_images_path):
-            os.makedirs(DefaultConfig.out_images_path)
+        # if not os.path.exists(DefaultConfig.coco_detect_out_images_dir_path):
+        #     os.makedirs(DefaultConfig.coco_detect_out_images_dir_path)
         
-        cv2.imwrite(os.path.join(DefaultConfig.out_images_path, name), img_pad)
+        cv2.imwrite(os.path.join(DefaultConfig.coco_detect_out_images_dir_path, name), img_pad)
         #cv2.imwrite("/root/autodl-tmp/res/out_images/"+name, img_pad)
 
 # for i,box in enumerate(boxes):
@@ -212,5 +216,3 @@ if __name__=="__main__":
 #         plt.gca().yaxis.set_major_locator(NullLocator())
 #         plt.savefig('out_images/{}'.format(name), bbox_inches='tight', pad_inches=0.0)
 #         plt.close()
-
-

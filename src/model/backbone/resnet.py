@@ -3,6 +3,8 @@ import torch.utils.model_zoo as model_zoo
 import math
 import torch
 
+from config import DefaultConfig
+
 __all__=['resnet18', 'resnet34', 'resnet50', 'resnet101','resnet152']
 
 model_urls = {
@@ -173,7 +175,8 @@ def resnet18(pretrained=False, **kwargs):
     """
     model = ResNet(BasicBlock, [2, 2, 2, 2], **kwargs)
     if pretrained:
-        model.load_state_dict(model_zoo.load_url(model_urls['resnet18']))
+        #model.load_state_dict(model_zoo.load_url(model_urls['resnet18']))
+        model.load_state_dict(model_zoo.load_url(model_urls['resnet18']), strict=False)
     return model
 
 
@@ -195,7 +198,8 @@ def resnet50(pretrained=False, **kwargs):
     """
     model = ResNet(Bottleneck, [3, 4, 6, 3], **kwargs)
     if pretrained:
-        model.load_state_dict(torch.load('/root/autodl-tmp/fcos/checkpoint/resnet50-19c8e357.pth'),strict=False)
+        model.load_state_dict(torch.load(DefaultConfig.coco_backbone_resnet50_path), strict=False)
+        # model.load_state_dict(torch.load('/root/autodl-tmp/fcos/checkpoint/resnet50-19c8e357.pth'),strict=False)
         # model.load_state_dict(model_zoo.load_url(model_urls['resnet50']))
     return model
 

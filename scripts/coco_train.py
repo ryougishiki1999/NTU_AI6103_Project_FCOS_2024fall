@@ -1,10 +1,19 @@
+import os
+import sys
+sys.path.append(os.path.normpath(os.path.join(os.path.abspath(os.path.dirname(__file__)), '..', 'src')))
+
+from config import DefaultConfig
+
+if DefaultConfig.choosen_backbone is not DefaultConfig.Backbone.ResNet50:
+    print("current backbone:", DefaultConfig.choosen_backbone)
+    raise ValueError("CoCo Datset Training only supports RestNet50 as backbone now!")
+
 from tabnanny import check
 from model.fcos import FCOSDetector
 import torch
 from dataset.COCO_dataset import COCODataset
 import math,time
 from dataset.augment import Transforms
-import os
 import numpy as np
 import random
 import torch.backends.cudnn as cudnn
@@ -12,9 +21,8 @@ import argparse
 from torch.utils.tensorboard import SummaryWriter
 from config import DefaultConfig
 
-
-
 os.environ["CUDA_VISIBLE_DEVICES"]=DefaultConfig.gpu_id
+
 train_dataset = COCODataset(
     DefaultConfig.coco_train_data_path,
     DefaultConfig.coco_train_label_path,
@@ -48,7 +56,7 @@ def lr_decrease(step):
             lr *= 0.1
     return float(lr)
 
-checkpoint_path = DefaultConfig.self_check_point_path
+checkpoint_path = DefaultConfig.coco_train_eval_check_point_path
 
 
 if os.path.exists(checkpoint_path):
@@ -187,10 +195,4 @@ plt.grid(True)
 plt.legend()
 
 plt.tight_layout()
-plt.savefig(DefaultConfig.out_loss_path)
-
-
-
-
-
-
+plt.savefig(DefaultConfig.coco_out_loss_path)

@@ -1,6 +1,8 @@
 from .head import ClsCntRegHead
 from .fpn_neck import FPN
-from .backbone.resnet import resnet50
+from .backbone.resnet import resnet50, resnet18
+from .backbone.mobilenet import MobileNetBackbone
+from .backbone.vovnet import vovnet27_slim
 import torch.nn as nn
 from .loss import GenTargets,LOSS,coords_fmap2orig
 import torch
@@ -14,7 +16,17 @@ class FCOS(nn.Module):
         super().__init__()
         if config is None:
             config=DefaultConfig
-        self.backbone=resnet50(pretrained=config.pretrained,if_include_top=False)
+        #self.backbone=resnet50(pretrained=config.pretrained,if_include_top=False)
+        if DefaultConfig.choosen_backbone == DefaultConfig.Backbone.ResNet50:
+            self.backbone=resnet50(pretrained=config.pretrained,if_include_top=False)
+        elif DefaultConfig.choosen_backbone == DefaultConfig.Backbone.VovNet27Slim:
+            self.backbone=vovnet27_slim(pretrained=config.pretrained)
+        elif DefaultConfig.choosen_backbone == DefaultConfig.Backbone.MobileNetV2:
+            self.backbone=MobileNetBackbone(pretrained=config.pretrained)
+        elif DefaultConfig.choosen_backbone == DefaultConfig.Backbone.ResNet18:
+            self.backbone=resnet18(pretrained=config.pretrained,if_include_top=False)
+        print(f"INFO===>backbone:{DefaultConfig.choosen_backbone}")
+            
         self.fpn=FPN(config.fpn_out_channels,use_p5=config.use_p5)
         self.head=ClsCntRegHead(config.fpn_out_channels,config.class_num,
                                 config.use_GN_head,config.cnt_on_reg,config.prior)
